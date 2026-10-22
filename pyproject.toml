@@ -1,0 +1,31 @@
+[project]
+name = "ha-google-docs"
+version = "0.1.0"
+description = "Google Docs custom integration for Home Assistant"
+requires-python = ">=3.14.2"
+license = "Apache-2.0"
+
+[dependency-groups]
+test = [
+  "pytest-homeassistant-custom-component==0.13.373",
+  "google-api-python-client==2.71.0",
+  "ruff==0.17.1",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "--strict-markers --disable-socket --allow-unix-socket"
+
+[tool.ruff]
+target-version = "py314"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+known-first-party = ["homeassistant", "custom_components.google_docs"]
