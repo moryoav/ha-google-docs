@@ -2,7 +2,7 @@
 
 Google Docs provides actions to append and read text in a Google document. It follows the Home Assistant Google Sheets integration: each setup entry creates one document named **Home Assistant**, and actions select that entry. You can rename the document in Google Docs and rename the entry in Home Assistant.
 
-This is an experimental custom integration being tested locally before a possible Home Assistant Core contribution. It is developed and tested against Home Assistant 2026.10.2. Google Docs remains a cloud service and needs an internet connection.
+I am testing this custom integration locally while the [Home Assistant Core contribution](https://github.com/home-assistant/core/pull/187986) is under review. It is developed and tested against Home Assistant 2026.10.2. Google Docs remains a cloud service and needs an internet connection.
 
 ## Setup
 
@@ -74,4 +74,4 @@ The Google client requirement accepts the version already used by Home Assistant
 
 CI runs the test suite, coverage, Ruff, and hassfest. [Testing notes](docs/testing.md) record the initial automated checks and live Google Docs test. Report problems through [GitHub issues](https://github.com/moryoav/ha-google-docs/issues).
 
-The module layout mirrors a Core integration. [Core preparation notes](docs/core-preparation.md) describe the remaining upstream work. No Core contribution or acceptance is implied by this local installation.
+The module layout mirrors a Core integration. [Core contribution notes](docs/core-preparation.md) link the code, documentation, and branding PRs and describe the differences from the custom version. Continue using the custom integration for local testing while the Core contribution is under review.

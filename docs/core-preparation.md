@@ -1,22 +1,31 @@
-# Preparing a Home Assistant Core contribution
+# Home Assistant Core contribution
 
-The runtime code follows `google_sheets`: a service integration, UI OAuth flow, one document ID as each entry's unique ID, HA-managed token refresh, and actions with config-entry selectors. The API calls use Google's published Python client rather than hand-written HTTP requests. No private credentials or account tokens belong in the source tree.
+I have opened three linked PRs:
 
-The local adapter is under `custom_components/google_docs`. For a Core contribution, move it to `homeassistant/components/google_docs`, remove the custom manifest `version`, update the documentation URL to the integration's Home Assistant documentation, and add the current integration category. The boolean setup/unload return values match HA 2026.10.2; adapt those signatures to the Core development branch when preparing the PR.
+- [Core integration and tests](https://github.com/home-assistant/core/pull/187986)
+- [Integration and action documentation](https://github.com/home-assistant/home-assistant.io/pull/49636)
+- [Google Docs branding](https://github.com/home-assistant/brands/pull/11357)
 
-Tests already follow `tests/components/google_docs`. In Core, change custom-component imports and patch targets to `homeassistant.components.google_docs` and use the test helpers of the target Core checkout. Keep token-flow, API transport, error, entry-isolation, and text-extraction coverage. Regenerate English translations through Core's translation tooling instead of maintaining `translations/en.json` by hand.
+I modeled the integration on Google Sheets: the same OAuth setup, one document per entry, Home Assistant token refresh, and actions with config-entry selectors. The append and read actions are the basic functionality. An OAuth-only first PR would leave automations with no way to use the document.
 
-Before submission:
+## Differences in the Core version
 
-- Agree on an action-only initial integration with Core maintainers. Current first-PR guidance asks for one platform and no custom actions; the older Google Sheets integration is a precedent, not approval for a new action-only integration.
-- Meet Bronze rules and add a complete `quality_scale.yaml`, with explicit reasons for entity-related exemptions. Do not claim a quality tier until Core's checks and review support it.
-- Add `google_docs` to `homeassistant/brands/google.json`, run hassfest, and include generated metadata changes.
-- Add Google Docs icon/logo assets to the brands repository.
-- Add a Home Assistant documentation page with setup, permissions, action examples, first-tab behavior, errors, and removal instructions.
-- Confirm the Google API client's version against all integrations sharing the requirement. Avoid upgrading that shared requirement as an incidental part of the new integration.
-- Run Core's tests, hassfest, typing, formatting, and requirement-generation checks on the target branch.
-- Have the human contributor review, understand, and explain the complete change before submitting it.
+- Integration files live under `homeassistant/components/google_docs`.
+- The manifest uses Core documentation, category, and quality metadata. It pins `google-api-python-client==2.71.0`, the version already shared by Google Mail and Google Tasks.
+- Setup and unload return `None`, as required by the Core development branch. The custom version returns `True` for Home Assistant 2026.10.2.
+- OAuth messages reuse Core's shared translations. English translations are generated with Core's translation tooling.
+- Tests use Core's native test helpers and integration import paths.
+- Google grouping, code owners, strict typing, requirements, and generated metadata are included in the Core PR.
+- The quality-scale file covers Bronze requirements and records entity-related exemptions.
 
-Optional features such as selecting existing documents, other tabs, formatting, templates, and document creation actions are outside the first local version. Keep them separate if added later.
+I kept the same document operations and two actions. Selecting existing documents, additional tabs, formatting, and document creation actions remain outside this contribution.
 
-References: [Google Sheets source](https://github.com/home-assistant/core/tree/2026.10.2/homeassistant/components/google_sheets), [new integrations](https://contributors.home-assistant.io/core/integrations/create/), [quality scale](https://contributors.home-assistant.io/core/quality-scale/), [library requirements](https://contributors.home-assistant.io/core/integrations/api-library/), and [integration brands](https://contributors.home-assistant.io/core/integrations/brands/).
+## Validation
+
+All 52 tests pass against the Core development checkout on Python 3.14.8, with 100% statement and branch coverage. The configured hooks pass for all changed files, including Ruff, Pylint, mypy, hassfest, and requirement generation.
+
+The full repository lint run was interrupted after WSL became unresponsive under memory pressure. Validation then completed for the changed files. Upstream CI results are available in the Core PR.
+
+I also tested the custom integration against a real Google document through Home Assistant, including Unicode append and exact readback. The custom version includes local branding in its `brand` directory; the Core version uses the separate branding PR.
+
+The contribution is under review. The custom integration remains available for local testing.
