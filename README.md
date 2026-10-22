@@ -18,6 +18,8 @@ The requested scope is `https://www.googleapis.com/auth/drive.file`, the same li
 
 The custom integration appears as **Google Docs** in the integration picker. The built-in Google grouping is Core metadata and is not modified by this installation.
 
+The integration includes its Google Docs icon in the `brand` directory, which Home Assistant serves locally.
+
 ## Append text
 
 Use `google_docs.append_text` and choose the document entry in the action editor:
